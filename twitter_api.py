@@ -29,7 +29,8 @@ def create_api():
 
 def delete_old_media():
     for image in os.listdir('./tmp'):
-        os.remove('./tmp/' + image)
+        if (image != '.gitkeep'):
+            os.remove('./tmp/' + image)
     logger.info("Old media cleaned.")
 
 

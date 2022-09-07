@@ -96,12 +96,25 @@ def check_mentions(api, since_id):
                 logger.error(f'Error on reply. Raise: {e}', exc_info=True)
                 pass
 
+            try:
+                delete_old_media()  # Deletes the image
+            except Exception as e:
+                logger.critical(
+                    f'Failed to clean images. Raise: {e}', exc_info=True)
+                pass
+
     return new_since_id
 
 
 def main():
     api = create_api()
     since_id = 1
+
+    try:
+        delete_old_media()
+    except Exception as e:
+        logger.critical(f'Failed to clean images. Raise: {e}', exc_info=True)
+        pass
 
     while True:
         since_id = check_mentions(api, since_id)

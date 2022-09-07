@@ -49,15 +49,13 @@ def check_mentions(api, since_id):
     logger.info("Retrieving mentions...")
     new_since_id = since_id
 
-    for tweet in tweepy.Cursor(api.mentions_timeline,
-                               since_id=since_id).items():
+    for tweet in tweepy.Cursor(api.mentions_timeline, since_id=since_id).items():  # Checks for new mentions
         new_since_id = max(tweet.id, new_since_id)
 
         if tweet.in_reply_to_status_id is not None:
             continue
-        if any(re.findall(r'"([^"]*)"', tweet.text)):
-            logger.info(
-                f'Found a tweet with a quote. Tweet URL: https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}')
+        if any(re.findall(r'"([^"]*)"', tweet.text)):   # Checks if the tweet contains a quote
+            logger.info(f'Found a tweet with a quote. Tweet URL: https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}')
 
             try:
                 delete_old_media()
@@ -66,22 +64,22 @@ def check_mentions(api, since_id):
                 pass
 
             try:
-                prompt = re.findall(r'"([^"]*)"', tweet.text)
-                generate_and_download_image(prompt[0])
+                prompt = re.findall(r'"([^"]*)"', tweet.text)   # Gets the quote
+                generate_and_download_image(prompt[0])    # Generates an image
             except Exception as e:
                 logger.critical(
                     f'Error on DALL-E image generate. Raise: {e}', exc_info=True)
                 pass
 
             try:
-                api.create_favorite(tweet.id)
+                api.create_favorite(tweet.id)   # Likes the tweet
                 logger.info("Tweet liked.")
             except Exception as e:
                 logger.error(f'Error on like. Raise: {e}', exc_info=True)
                 pass
 
             try:
-                media_ids = upload_media(api)
+                media_ids = upload_media(api)   # Uploads the image
             except Exception as e:
                 logger.critical(
                     f'Error on upload media. Raise: {e}', exc_info=True)
@@ -91,8 +89,8 @@ def check_mentions(api, since_id):
                 api.update_status(
                     status=f'Here is DALL-E\'s interpretation of "{prompt[0]}".',
                     attachment_url=f'https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}',
-                    media_ids=media_ids
-                )
+                    media_ids=media_ids)  # Replies to the tweet with the image
+                print(media_ids)
                 logger.info("Tweet sent.")
             except Exception as e:
                 logger.error(f'Error on reply. Raise: {e}', exc_info=True)

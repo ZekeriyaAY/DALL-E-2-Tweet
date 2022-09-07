@@ -1,5 +1,5 @@
 import tweepy
-from varenv import *
+from credential import *
 from dalle_api import generate_and_download_image
 import logging
 import time

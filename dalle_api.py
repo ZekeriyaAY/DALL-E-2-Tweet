@@ -1,5 +1,5 @@
 from dalle2 import Dalle2
-from varenv import *
+from credential import *
 import logging
 
 logger = logging.getLogger("dalle_api")

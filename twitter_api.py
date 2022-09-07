@@ -45,6 +45,18 @@ def upload_media(api):
     return media_ids
 
 
+def pre_quoted_tweet(api, tweet):
+    tweet_url = f'https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}'
+
+    for quote_tweet in tweepy.Cursor(api.search_tweets, q="url:"+tweet_url, result_type='recent').items():
+        if quote_tweet.is_quote_status == True: # if the tweet is a quote
+            if tweet.id == quote_tweet.quoted_status_id:    # Checks if tweet is a retweet of the specific tweet
+                if api.verify_credentials().id == quote_tweet.user.id:  # Checks if the tweet is from the bot
+                    logger.info(
+                        f'Found a pre-quote tweet. Tweet URL: https://twitter.com/{quote_tweet.user.screen_name}/status/{quote_tweet.id}')
+                    return True
+
+
 def check_mentions(api, since_id):
     logger.info("Retrieving mentions...")
     new_since_id = since_id
@@ -58,9 +70,10 @@ def check_mentions(api, since_id):
             logger.info(f'Found a tweet with a quote. Tweet URL: https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}')
 
             try:
-                delete_old_media()
+                if pre_quoted_tweet(api, tweet):    # Checks if the tweet is a pre-quote
+                    continue
             except Exception as e:
-                logger.critical("Failed to clean images.", exc_info=True)
+                logger.critical(f'Failed to process tweet. Raise: {e}', exc_info=True)
                 pass
 
             try:

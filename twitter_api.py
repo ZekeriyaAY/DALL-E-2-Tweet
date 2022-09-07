@@ -20,9 +20,9 @@ def create_api():
 
     try:
         api.verify_credentials()
-        logger.info("API created.")
+        logger.info("Twitter API created.")
     except Exception as e:
-        logger.critical("Failed to create API.", exc_info=True)
+        logger.critical("Failed to create Twitter API.", exc_info=True)
         raise e
     return api
 

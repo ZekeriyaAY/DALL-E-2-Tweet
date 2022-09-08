@@ -12,4 +12,3 @@ access_token_secret = os.environ.get('Twitter_Access_Token_Secret')
 
 # DALL-E API credentials
 API_Key = os.environ.get('DALLE_API_Key')
-

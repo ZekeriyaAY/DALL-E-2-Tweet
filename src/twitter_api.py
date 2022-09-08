@@ -133,9 +133,8 @@ def main():
 if __name__ == '__main__':
     try:
         main()
-    except KeyboardInterrupt:
+    except KeyboardInterrupt:  # Stops the program with Ctrl+C
         logger.info("Keyboard Interrupt. Cleaning...")
         delete_old_media()
         logger.info("Keyboard Interrupt. Exiting...")
         sys.exit("Keyboard Interrupt. Exiting...")
-

@@ -4,11 +4,11 @@ from dalle_api import generate_and_download_image
 import logging
 import time
 import re
-
+import os
+import sys
 
 logger = logging.getLogger("twitter_api")
-logging.basicConfig(filename='./log/log1.log',
-                    filemode='w', level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
 logger.setLevel(level=logging.INFO)
 logger.info("Logging started.")
 
@@ -28,17 +28,21 @@ def create_api():
 
 
 def delete_old_media():
-    for image in os.listdir('./tmp'):
-        if (image != '.gitkeep'):
-            os.remove('./tmp/' + image)
-    logger.info("Old media cleaned.")
+    try:
+        for image in os.listdir('./images'):
+            if (image != '.gitkeep'):
+                os.remove('./images/' + image)
+        logger.info("Old media cleaned.")
+    except Exception as e:
+        logger.critical(f'Failed to clean images. Raise: {e}', exc_info=True)
+        pass
 
 
 def upload_media(api):
     media_ids = []
-    for image in os.listdir('./tmp'):
+    for image in os.listdir('./images'):
         if (image.endswith('.png') or image.endswith('.jpg') or image.endswith('.jpeg')):
-            media = api.media_upload('./tmp/' + image)
+            media = api.media_upload('./images/' + image)
             media_ids.append(media.media_id)
     logger.info("Media uploaded.")
 
@@ -100,21 +104,15 @@ def check_mentions(api, since_id):
 
             try:
                 api.update_status(
-                    status=f'Here is DALL-E\'s interpretation of "{prompt[0]}".',
+                    status=f'Here is DALL·E\'s interpretation of "{prompt[0]}".',
                     attachment_url=f'https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}',
                     media_ids=media_ids)  # Replies to the tweet with the image
-                print(media_ids)
                 logger.info("Tweet sent.")
             except Exception as e:
                 logger.error(f'Error on reply. Raise: {e}', exc_info=True)
                 pass
 
-            try:
-                delete_old_media()  # Deletes the image
-            except Exception as e:
-                logger.critical(
-                    f'Failed to clean images. Raise: {e}', exc_info=True)
-                pass
+            delete_old_media()  # Deletes the image
 
     return new_since_id
 
@@ -123,11 +121,7 @@ def main():
     api = create_api()
     since_id = 1
 
-    try:
-        delete_old_media()
-    except Exception as e:
-        logger.critical(f'Failed to clean images. Raise: {e}', exc_info=True)
-        pass
+    delete_old_media()
 
     while True:
         since_id = check_mentions(api, since_id)
@@ -136,4 +130,10 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:  # Stops the program with Ctrl+C
+        logger.info("Keyboard Interrupt. Cleaning...")
+        delete_old_media()
+        logger.info("Keyboard Interrupt. Exiting...")
+        sys.exit("Keyboard Interrupt. Exiting...")

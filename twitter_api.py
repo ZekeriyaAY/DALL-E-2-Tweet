@@ -4,6 +4,7 @@ from dalle_api import generate_and_download_image
 import logging
 import time
 import re
+import os
 
 
 logger = logging.getLogger("twitter_api")
@@ -103,7 +104,6 @@ def check_mentions(api, since_id):
                     status=f'Here is DALL-E\'s interpretation of "{prompt[0]}".',
                     attachment_url=f'https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}',
                     media_ids=media_ids)  # Replies to the tweet with the image
-                print(media_ids)
                 logger.info("Tweet sent.")
             except Exception as e:
                 logger.error(f'Error on reply. Raise: {e}', exc_info=True)

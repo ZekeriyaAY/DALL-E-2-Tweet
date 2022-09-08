@@ -8,8 +8,7 @@ import os
 import sys
 
 logger = logging.getLogger("twitter_api")
-logging.basicConfig(filename='./log/log1.log',
-                    filemode='w', level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(message)s')
 logger.setLevel(level=logging.INFO)
 logger.info("Logging started.")
 

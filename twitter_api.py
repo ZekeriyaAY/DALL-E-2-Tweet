@@ -101,7 +101,7 @@ def check_mentions(api, since_id):
 
             try:
                 api.update_status(
-                    status=f'Here is DALL-E\'s interpretation of "{prompt[0]}".',
+                    status=f'Here is DALL·E\'s interpretation of "{prompt[0]}".',
                     attachment_url=f'https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}',
                     media_ids=media_ids)  # Replies to the tweet with the image
                 logger.info("Tweet sent.")

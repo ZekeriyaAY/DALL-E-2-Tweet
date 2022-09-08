@@ -5,7 +5,7 @@ import logging
 import time
 import re
 import os
-
+import sys
 
 logger = logging.getLogger("twitter_api")
 logging.basicConfig(filename='./log/log1.log',
@@ -131,4 +131,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        logger.info("Keyboard Interrupt. Cleaning...")
+        delete_old_media()
+        logger.info("Keyboard Interrupt. Exiting...")
+        sys.exit("Keyboard Interrupt. Exiting...")
+

@@ -29,9 +29,9 @@ def create_api():
 
 def delete_old_media():
     try:
-        for image in os.listdir('./tmp'):
+        for image in os.listdir('./images'):
             if (image != '.gitkeep'):
-                os.remove('./tmp/' + image)
+                os.remove('./images/' + image)
         logger.info("Old media cleaned.")
     except Exception as e:
         logger.critical(f'Failed to clean images. Raise: {e}', exc_info=True)
@@ -40,9 +40,9 @@ def delete_old_media():
 
 def upload_media(api):
     media_ids = []
-    for image in os.listdir('./tmp'):
+    for image in os.listdir('./images'):
         if (image.endswith('.png') or image.endswith('.jpg') or image.endswith('.jpeg')):
-            media = api.media_upload('./tmp/' + image)
+            media = api.media_upload('./images/' + image)
             media_ids.append(media.media_id)
     logger.info("Media uploaded.")
 

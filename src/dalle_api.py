@@ -13,6 +13,6 @@ except Exception as e:
 
 
 def generate_and_download_image(prompt):
-    generations = dalle.generate_and_download(prompt=prompt, image_dir="tmp")
+    generations = dalle.generate_and_download(prompt=prompt, image_dir="images")
     logger.info(generations)   # Returns a list of image paths
     logger.info("Images created and downloaded.")

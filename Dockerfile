@@ -11,4 +11,6 @@ RUN pip3 install -r requirements.txt
 
 RUN mkdir /bots/images/
 
+LABEL maintainer="Zekeriya AY <zekeriya@zekeriyaay.com>"
+
 CMD [ "python3", "twitter_api.py" ]

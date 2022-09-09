@@ -37,7 +37,6 @@ jobs:
           tags: |
             # set latest tag for master branch
             type=raw,value=latest,enable={{is_default_branch}}
-            type=sha,prefix=sha-,format=short
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3

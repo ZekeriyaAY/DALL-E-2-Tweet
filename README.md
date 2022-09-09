@@ -5,25 +5,21 @@ Generate image from tweets with DALL·E 2
 ## 🐦 Tweet Bot Usage
 
 1. Write your prompt between quotes. Mention the Twitter Bot ([@zekeriyaaycom](https://twitter.com/zekeriyaaycom)).\
-    Example: [![Example Usage](docs/example_usage.png)](https://twitter.com/Fatih__Karahan/status/1568112910244757504)
+    [![Example Usage](docs/example_usage.png)](https://twitter.com/Fatih__Karahan/status/1568112910244757504)
 1. Send tweet.
 1. Wait for DALL-E's interpretation.\
-    Example: [![Example Result](docs/example_result.png)](https://twitter.com/zekeriyaaycom/status/1567879936320454659)
-
-<br>
+    [![Example Result](docs/example_result.png)](https://twitter.com/zekeriyaaycom/status/1567879936320454659)
 
 ---
-
-<br>
 
 ## 🚀 Make Own Tweet Bot
 
 1. Pull [dalle2tweet Docker Package](https://github.com/ZekeriyaAY/DALLE2Tweet/pkgs/container/dalle2tweet).
-    ```sh
+    ```ps1
     $ docker pull ghcr.io/zekeriyaay/dalle2tweet:latest
     ```
 1. Run Docker image with your own Twitter API & DALL·E 2 API credentials.
-    ```sh
+    ```ps1
     $ docker run -it -e TWITTER_CONSUMER_KEY="*****" \
         -e TWITTER_CONSUMER_SECRET="*****" \
         -e TWITTER_ACCESS_TOKEN="****-********" \

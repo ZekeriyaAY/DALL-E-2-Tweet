@@ -50,19 +50,25 @@ def upload_media(api):
 
 
 def pre_quoted_tweet(api, tweet):
-    tweet_url = f'https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}'
+    tweet_id = tweet.id
+    for tweet in tweepy.Cursor(api.user_timeline,user_id=api.verify_credentials().id).items():
+        if tweet.is_quote_status and tweet.quoted_status_id == tweet_id:
+            logger.info(f'Found a pre-quote. Tweet URL: https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}')
+            return True
+        
+    # WHY DO'NT YOU WORK?!
+    # tweet_url = f'https://twitter.com/{tweet.user.screen_name}/status/{tweet.id}'
 
-    for quote_tweet in tweepy.Cursor(api.search_tweets, q="url:"+tweet_url, result_type='recent').items():
-        if quote_tweet.is_quote_status == True: # if the tweet is a quote
-            if tweet.id == quote_tweet.quoted_status_id:    # Checks if tweet is a retweet of the specific tweet
-                if api.verify_credentials().id == quote_tweet.user.id:  # Checks if the tweet is from the bot
-                    logger.info(
-                        f'Found a pre-quote tweet. Tweet URL: https://twitter.com/{quote_tweet.user.screen_name}/status/{quote_tweet.id}')
-                    return True
+    # for quote_tweet in tweepy.Cursor(api.search_tweets, q="url:"+tweet_url, result_type='recent').items():
+    #     if quote_tweet.is_quote_status == True: # if the tweet is a quote
+    #         if tweet.id == quote_tweet.quoted_status_id:    # Checks if tweet is a retweet of the specific tweet
+    #             if api.verify_credentials().id == quote_tweet.user.id:  # Checks if the tweet is from the bot
+    #                 logger.info(
+    #                     f'Found a pre-quote tweet. Tweet URL: https://twitter.com/{quote_tweet.user.screen_name}/status/{quote_tweet.id}')
+    #                 return True
 
 
 def check_mentions(api, since_id):
-    logger.info("Retrieving mentions...")
     new_since_id = since_id
 
     for tweet in tweepy.Cursor(api.mentions_timeline, since_id=since_id).items():  # Checks for new mentions
@@ -113,6 +119,7 @@ def check_mentions(api, since_id):
                 pass
 
             delete_old_media()  # Deletes the image
+            logger.info("Waiting...")
 
     return new_since_id
 
@@ -125,7 +132,6 @@ def main():
 
     while True:
         since_id = check_mentions(api, since_id)
-        logger.info("Waiting...")
         time.sleep(30)
 
 
